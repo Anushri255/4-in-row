@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Four in a Row</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            margin-top: 20px;
+        }
+
+        #game-board {
+            display: grid;
+            grid-template-columns: repeat(7, 60px);
+            grid-template-rows: repeat(6, 60px);
+            gap: 5px;
+            justify-content: center;
+            margin: 20px auto;
+            width: fit-content;
+        }
+
+        .cell {
+            width: 60px;
+            height: 60px;
+            background-color: #ddd;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .cell.empty {
+            background-color: #fff;
+        }
+
+        .cell.player1 {
+            background-color: red;
+        }
+
+        .cell.player2 {
+            background-color: yellow;
+        }
+
+        #status {
+            font-size: 24px;
+            margin: 20px 0;
+        }
+
+        #reset-button {
+            font-size: 18px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Four in a Row</h1>
+    <div id="game-board"></div>
+    <div id="status">Player 1's turn</div>
+    <button id="reset-button">Reset Game</button>
+    <script>
+        const ROWS = 6;
+        const COLS = 7;
+        const board = [];
+        let currentPlayer = 1;
+        let gameOver = false;
+
+        const gameBoard = document.getElementById('game-board');
+        const statusDisplay = document.getElementById('status');
+        const resetButton = document.getElementById('reset-button');
+
+        // Initialize board and create cells
+        function initBoard() {
+            gameBoard.innerHTML = '';
+            for (let row = 0; row < ROWS; row++) {
+                const boardRow = [];
+                for (let col = 0; col < COLS; col++) {
+                    const cell = document.createElement('div');
+                    cell.classList.add('cell', 'empty');
+                    cell.dataset.row = row;
+                    cell.dataset.col = col;
+                    cell.addEventListener('click', handleCellClick);
+                    gameBoard.appendChild(cell);
+                    boardRow.push(0);
+                }
+                board.push(boardRow);
+            }
+        }
+
+        initBoard();
+
+        function handleCellClick(event) {
+        }
+    </script>
+</body>
+
+</html>
