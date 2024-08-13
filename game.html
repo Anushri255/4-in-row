@@ -82,6 +82,8 @@
         // Initialize board and create cells
         function initBoard() {
             gameBoard.innerHTML = '';
+            board.length = 0; // Ensure the board array is reset
+
             for (let row = 0; row < ROWS; row++) {
                 const boardRow = [];
                 for (let col = 0; col < COLS; col++) {
@@ -97,10 +99,80 @@
             }
         }
 
+        function handleCellClick(event) {
+            if (gameOver) return;
+
+            const col = parseInt(event.target.dataset.col);
+            const row = findEmptyRow(col);
+
+            if (row !== -1) {
+                board[row][col] = currentPlayer;
+                const cell = document.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`);
+                cell.classList.remove('empty');
+                cell.classList.add(`player${currentPlayer}`);
+
+                if (checkWin(row, col)) {
+                    statusDisplay.textContent = `Player ${currentPlayer} wins!`;
+                    gameOver = true;
+                } else if (isBoardFull()) {
+                    statusDisplay.textContent = `It's a tie!`;
+                    gameOver = true;
+                } else {
+                    currentPlayer = currentPlayer === 1 ? 2 : 1;
+                    statusDisplay.textContent = `Player ${currentPlayer}'s turn`;
+                }
+            }
+        }
+
+        function findEmptyRow(col) {
+            for (let row = ROWS - 1; row >= 0; row--) {
+                if (board[row][col] === 0) {
+                    return row;
+                }
+            }
+            return -1;
+        }
+
+        function checkWin(row, col) {
+            return (
+                checkDirection(row, col, 1, 0) || // Horizontal
+                checkDirection(row, col, 0, 1) || // Vertical
+                checkDirection(row, col, 1, 1) || // Diagonal /
+                checkDirection(row, col, 1, -1)   // Diagonal \
+            );
+        }
+
+        function checkDirection(row, col, rowDir, colDir) {
+            let count = 0;
+            for (let i = -3; i <= 3; i++) {
+                const r = row + i * rowDir;
+                const c = col + i * colDir;
+                if (r >= 0 && r < ROWS && c >= 0 && c < COLS && board[r][c] === currentPlayer) {
+                    count++;
+                    if (count === 4) {
+                        return true;
+                    }
+                } else {
+                    count = 0;
+                }
+            }
+            return false;
+        }
+
+        function isBoardFull() {
+            return board[0].every(cell => cell !== 0);
+        }
+
+        function resetGame() {
+            initBoard();
+            currentPlayer = 1;
+            gameOver = false;
+            statusDisplay.textContent = `Player 1's turn`;
+        }
+
+        resetButton.addEventListener('click', resetGame);
         initBoard();
 
-        function handleCellClick(event) {
-        }
     </script>
 </body>
 
